@@ -6,12 +6,14 @@ import {Provider} from 'react-redux';
 
 import productReducer from './store/reducer/product';
 import ProductNavigator from './navigations/ProductNavigator';
+import CartReducer from './store/reducer/cart';
 //#endregion
 
 export default function App(){
 
   const rootReducer = combineReducers({
     products : productReducer,
+    cart : CartReducer,
   });
 
   const store = createStore(rootReducer);

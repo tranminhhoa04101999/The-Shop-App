@@ -1,22 +1,31 @@
 import React from 'react';
-import { View, StyleSheet, Image, Text, Button, ColorPropType } from 'react-native';
+import { View, StyleSheet, Image, Text, Button, Platform, TouchableNativeFeedback, TouchableOpacity } from 'react-native';
 import Color from '../constants/Colors';
 
 const ProductItem = props => {
+    let Touch = TouchableOpacity;
+    if (Platform.OS === 'android' && Platform.Version >= 21) {
+        Touch = TouchableNativeFeedback;
+    }
+
     return (
         <View style={styles.screen}>
-            <View style={styles.imageContainer}>
-            <Image source={{ uri: props.imageUrl }} style={styles.image} />
+            <Touch onPress={props.onPressDetails} useForeground>
+                <View>
+                    <View style={styles.imageContainer}>
+                        <Image source={{ uri: props.imageUrl }} style={styles.image} />
 
-            </View>
-            <View style={styles.details}>
-                <Text style={styles.title}>{props.title}</Text>
-                <Text style={styles.price}>{props.price.toFixed(2)}</Text>
-            </View>
-            <View style={styles.buttonContainer}>
-                <View style={styles.buttonLeft}><Button color={Color.deepPink} title="View Details" onPress={() => { }}></Button></View>
-                <View style={styles.buttonRight}><Button color={Color.deepPink} title="To Cart" onPress={() => { }}></Button></View>
-            </View>
+                    </View>
+                    <View style={styles.details}>
+                        <Text style={styles.title}>{props.title}</Text>
+                        <Text style={styles.price}>{props.price.toFixed(2)}</Text>
+                    </View>
+                    <View style={styles.buttonContainer}>
+                        <View style={styles.buttonLeft}><Button color={Color.deepPink} title="View Details" onPress={props.onPressDetails}></Button></View>
+                        <View style={styles.buttonRight}><Button color={Color.deepPink} title="To Cart" onPress={props.onPressToCart}></Button></View>
+                    </View>
+                </View>
+            </Touch>
         </View>
     );
 };
@@ -47,8 +56,8 @@ const styles = StyleSheet.create({
     buttonContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        alignItems: 'center',
-        height: '18%',
+        alignItems: 'flex-end',
+        height: '15%',
     },
     buttonLeft: {
         borderTopRightRadius: 15,
@@ -71,7 +80,7 @@ const styles = StyleSheet.create({
     },
     imageContainer: {
         width: '100%',
-        height:'60%',
+        height: '60%',
     },
 
 });
