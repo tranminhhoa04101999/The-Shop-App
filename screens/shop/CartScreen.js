@@ -1,9 +1,10 @@
 import React from 'react';
 import { View, StyleSheet, FlatList, Button, Text } from 'react-native';
-import { useSelector,useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import Color from '../../constants/Colors';
 import CartItem from '../../components/CartItem';
-import * as CartActions from '../../store/action/cart'; 
+import * as CartActions from '../../store/action/cart';
+import * as OrderActions from '../../store/action/order';
 
 const CartScreen = props => {
     const dispatch = useDispatch();
@@ -23,24 +24,27 @@ const CartScreen = props => {
         return chuyenDoiQuaArray;
     });
     const renderItem = (data) => {
-        return <CartItem
-            quantity={data.item.quantity}
-            title={data.item.productTitle}
-            price={data.item.productPrice}
-            sum={data.item.sum}
-            onRemove={()=>dispatch(CartActions.removeFromCart(data.item.productId))}
-        />;
+        return (
+            <CartItem
+                quantity={data.item.quantity}
+                title={data.item.productTitle}
+                price={data.item.productPrice}
+                checkDelete = {true}
+                sum={data.item.sum}
+                onRemove={() => dispatch(CartActions.removeFromCart(data.item.productId))}
+            />
+        );
 
     };
     const totalAmount = useSelector(state => state.cart.totalAmount);
-    console.log(listItem);
     return (
         <View style={styles.screen}>
             <View style={styles.summary}>
                 <Text style={styles.summaryText}>
                     Total : <Text style={styles.amount}>$ {totalAmount.toFixed(2)}</Text>
                 </Text>
-                <Button title="Order Now" disabled={listItem.length === 0}></Button>
+                <Button title="Order Now" disabled={listItem.length === 0}
+                    onPress={() => dispatch(OrderActions.addOrder(listItem, totalAmount))} ></Button>
             </View>
             <FlatList data={listItem} keyExtractor={item => item.productId} renderItem={renderItem} />
         </View>

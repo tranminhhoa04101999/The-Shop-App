@@ -6,14 +6,15 @@ const CartItem = props => {
     return (
         <View style={styles.cartItem}>
             <View style={styles.itemData}>
-                <Text style={styles.quantity} >{props.quantity}</Text>
+                <Text style={styles.quantity} >{props.quantity}  </Text>
                 <Text style={styles.title} >{props.title}</Text>
             </View>
             <View style={styles.itemData}>
                 <Text style={styles.amount} >${props.sum.toFixed(2)}</Text>
-                <TouchableOpacity onPress={props.onRemove} style={styles.deleteButton}>
-                    <Icon name="trash-bin" color='red'></Icon>
-                </TouchableOpacity>
+                {props.checkDelete &&
+                    <TouchableOpacity onPress={props.onRemove} style={styles.deleteButton}>
+                        <Icon name="trash-bin" color='red'></Icon>
+                    </TouchableOpacity>}
             </View>
         </View>
     );
@@ -26,6 +27,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         justifyContent: 'space-between',
         marginHorizontal: 20,
+        marginVertical: 2,
     },
     itemData: {
         flexDirection: 'row',

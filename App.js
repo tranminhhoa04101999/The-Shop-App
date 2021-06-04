@@ -7,6 +7,7 @@ import {Provider} from 'react-redux';
 import productReducer from './store/reducer/product';
 import ProductNavigator from './navigations/ProductNavigator';
 import CartReducer from './store/reducer/cart';
+import OrderReducer from './store/reducer/order';
 //#endregion
 
 export default function App(){
@@ -14,6 +15,7 @@ export default function App(){
   const rootReducer = combineReducers({
     products : productReducer,
     cart : CartReducer,
+    order : OrderReducer,
   });
 
   const store = createStore(rootReducer);
