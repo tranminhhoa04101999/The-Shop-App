@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState,  } from 'react';
 import { View, StyleSheet, Text, ScrollView, TextInput } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
@@ -8,20 +8,20 @@ import * as ProductActions from '../../store/action/product';
 const EditProductScreen = ({ props, navigation, route }) => {
     const dispatch = useDispatch();
     const { prodId } = route.params;
-
     const editProd = useSelector(state => state.products.userProducts.find(prod => prod.id === prodId));
 
-    const [title, setTitle] = useState(editProd ? editProd.title  : '');
-    const [imageUrl, setImageUrl] = useState(editProd ? editProd.imageUrl  : '');
-    const [price, setPrice] = useState(editProd ? editProd.price  : '');
-    const [description, setDescription] = useState(editProd ? editProd.description  : '');
+    const [title, setTitle] = useState(editProd ? editProd.title : '');
+    const [imageUrl, setImageUrl] = useState(editProd ? editProd.imageUrl : '');
+    const [price, setPrice] = useState(editProd ? editProd.price : '');
+    const [description, setDescription] = useState(editProd ? editProd.description : '');
 
-    const submit = ()=>{
-        if(editProd){
-            dispatch(ProductActions.updateProduct(prodId,title,description,imageUrl));
+
+    const submit = () => {
+        if (editProd) {
+            dispatch(ProductActions.updateProduct(prodId, title, description, imageUrl));
         }
-        else{
-            dispatch(ProductActions.createProduct(title,description,imageUrl,+price));
+        else {
+            dispatch(ProductActions.createProduct(title, description, imageUrl, +price));
         }
         navigation.goBack();
     };
@@ -30,11 +30,11 @@ const EditProductScreen = ({ props, navigation, route }) => {
         navigation.setOptions({
             title: route.params.title,
             headerRight: () =>
-            <HeaderButtons HeaderButtonComponent={HeaderButton}>
-                <Item iconName="save" title="Save" onPress={submit} />
-            </HeaderButtons>,
+                <HeaderButtons HeaderButtonComponent={HeaderButton}>
+                    <Item iconName="save" title="Save" onPress={submit} />
+                </HeaderButtons>,
         });
-    },[title,imageUrl,price,description]);
+    }, [title, imageUrl, price, description]);
 
     return (
         <ScrollView style={styles.from}>

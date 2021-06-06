@@ -1,8 +1,9 @@
 //#region import thu vien
 import React from 'react';
 import {} from 'react-native';
-import {createStore,combineReducers} from 'redux';
+import {createStore,combineReducers,applyMiddleware} from 'redux';
 import {Provider} from 'react-redux';
+import ReduxThunk from 'redux-thunk';
 
 import productReducer from './store/reducer/product';
 import ProductNavigator from './navigations/ProductNavigator';
@@ -18,7 +19,7 @@ export default function App(){
     order : OrderReducer,
   });
 
-  const store = createStore(rootReducer);
+  const store = createStore(rootReducer,applyMiddleware(ReduxThunk));
 
 
   return (

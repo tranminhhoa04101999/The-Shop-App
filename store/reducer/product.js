@@ -1,6 +1,6 @@
 import PRODUCTS from '../../data/dummy-data';
 import Product from '../../models/Product';
-import { DELETE_PRODUCT, CREATE_PRODUCT, UPDATE_PRODUCT } from '../action/product';
+import { DELETE_PRODUCT, CREATE_PRODUCT, UPDATE_PRODUCT, SET_PRODUCT } from '../action/product';
 
 const initialProducts = {
     availableProducts: PRODUCTS,
@@ -9,16 +9,19 @@ const initialProducts = {
 
 export default (state = initialProducts, action) => {
     switch (action.type) {
+        case SET_PRODUCT:
+            return {
+                availableProducts: action.products,
+                userProducts: action.products
+            };
         case CREATE_PRODUCT:
-            console.log("create recuder ", action.productData);
-            const newProduct = new Product(new Date().toString(), 'u1',action.productData.title, action.productData.imageUrl, action.productData.description, action.productData.price);
+            const newProduct = new Product(action.productData.id, 'u1', action.productData.title, action.productData.imageUrl, action.productData.description, action.productData.price);
             return {
                 ...state,
                 availableProducts: state.availableProducts.concat(newProduct),
                 userProducts: state.userProducts.concat(newProduct),
             }
         case UPDATE_PRODUCT:
-            console.log("updateproduct recuder ", action.productData);
             const productIndex = state.userProducts.findIndex(
                 prod => prod.id === action.pid
             );
@@ -43,7 +46,6 @@ export default (state = initialProducts, action) => {
                 userProducts: updateUserProduct
             }
         case DELETE_PRODUCT:
-            console.log("deleteproduct recuder ");
             return {
                 ...state,
                 userProducts: state.userProducts.filter(prod => prod.id !== action.pid),
