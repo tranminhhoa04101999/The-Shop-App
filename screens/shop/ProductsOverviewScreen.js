@@ -33,7 +33,6 @@ const ProductOverviewScreen = ({ props, navigation }) => {
 
     const isload = useCallback(async () => {
         setError(null);
-        setIsLoading(true);
         try {
             await dispatch(productActions.fetchProducts());
         }
@@ -44,7 +43,11 @@ const ProductOverviewScreen = ({ props, navigation }) => {
     }, [dispatch, setIsLoading, setError]);
 
     useEffect(() => {
-        isload();
+        setIsLoading(true);
+        isload().then(() => {
+            setIsLoading(false)
+        }
+        );
     }, [dispatch, isload]);
 
     if (error) {
@@ -91,7 +94,10 @@ const ProductOverviewScreen = ({ props, navigation }) => {
 
 
     return (
-        <FlatList data={availableProducts}
+        <FlatList
+            onRefresh={isload}
+            refreshing={isLoading}
+            data={availableProducts}
             keyExtractor={item => item.id}
             renderItem={renderItem} />
     );

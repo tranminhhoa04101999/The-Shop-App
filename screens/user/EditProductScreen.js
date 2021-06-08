@@ -1,11 +1,15 @@
-import React, { useCallback, useEffect, useState,  } from 'react';
-import { View, StyleSheet, Text, ScrollView, TextInput } from 'react-native';
+import React, { useCallback, useEffect, useState, } from 'react';
+import { View, StyleSheet, Text, ScrollView, TextInput, ActivityIndicator, Alert } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import HeaderButton from '../../components/HeaderButton';
+import Color from '../../constants/Colors';
 import * as ProductActions from '../../store/action/product';
 
 const EditProductScreen = ({ props, navigation, route }) => {
+    const [isLoading, setLoading] = useState(false);
+    const [error, setError] = useState();
+
     const dispatch = useDispatch();
     const { prodId } = route.params;
     const editProd = useSelector(state => state.products.userProducts.find(prod => prod.id === prodId));
@@ -15,15 +19,33 @@ const EditProductScreen = ({ props, navigation, route }) => {
     const [price, setPrice] = useState(editProd ? editProd.price : '');
     const [description, setDescription] = useState(editProd ? editProd.description : '');
 
-
-    const submit = () => {
+    useEffect(() => {
+        if (error) {
+            Alert.alert('have error', error, [{ text: 'OK' }]);
+        }
+    }, [error]);
+    const submit = async () => {
+        setError(null);
+        setLoading(true);
         if (editProd) {
-            dispatch(ProductActions.updateProduct(prodId, title, description, imageUrl));
+            try {
+                await dispatch(ProductActions.updateProduct(prodId, title, description, imageUrl));
+                navigation.goBack();
+
+            } catch (err) {
+                setError(err.message);
+            }
         }
         else {
-            dispatch(ProductActions.createProduct(title, description, imageUrl, +price));
+            try {
+                await dispatch(ProductActions.createProduct(title, description, imageUrl, +price));
+                navigation.goBack();
+
+            } catch (err) {
+                setError(err.message);
+            }
         }
-        navigation.goBack();
+        setLoading(false);
     };
 
     useEffect(() => {
@@ -35,6 +57,12 @@ const EditProductScreen = ({ props, navigation, route }) => {
                 </HeaderButtons>,
         });
     }, [title, imageUrl, price, description]);
+
+    if (isLoading) {
+        return <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+            <ActivityIndicator size={'large'} color={Color.primaryColor} />
+        </View>
+    };
 
     return (
         <ScrollView style={styles.from}>

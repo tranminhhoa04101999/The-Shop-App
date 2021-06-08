@@ -12,6 +12,8 @@ target 'TheShopApp' do
     :hermes_enabled => false
   )
 
+  pod 'RNCAsyncStorage', :path => '../node_modules/@react-native-async-storage/async-storage'
+
   target 'TheShopAppTests' do
     inherit! :complete
     # Pods for testing

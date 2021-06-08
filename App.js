@@ -9,6 +9,7 @@ import productReducer from './store/reducer/product';
 import ProductNavigator from './navigations/ProductNavigator';
 import CartReducer from './store/reducer/cart';
 import OrderReducer from './store/reducer/order';
+import AuthReducer from './store/reducer/auth';
 //#endregion
 
 export default function App(){
@@ -17,6 +18,7 @@ export default function App(){
     products : productReducer,
     cart : CartReducer,
     order : OrderReducer,
+    auth: AuthReducer,
   });
 
   const store = createStore(rootReducer,applyMiddleware(ReduxThunk));

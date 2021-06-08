@@ -1,6 +1,6 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
-import { createDrawerNavigator } from '@react-navigation/drawer'
+import { createDrawerNavigator, DrawerItem} from '@react-navigation/drawer'
 import React from 'react';
 //#region import các thành phần tham gia
 import ProductOverviewScreen from '../screens/shop/ProductsOverviewScreen';
@@ -8,9 +8,12 @@ import ProductDetaiScreen from '../screens/shop/ProductDetailScreen';
 import Color from '../constants/Colors';
 import CartScreen from '../screens/shop/CartScreen';
 import OrderScreen from '../screens/shop/OrderScreen';
-import { Icon } from 'react-native-vector-icons/Ionicons';
+import { Icon } from 'react-native-vector-icons/MaterialIcons';
 import UserProductScreen from '../screens/user/UserProductScreen';
 import EditProductScreen from '../screens/user/EditProductScreen';
+import AuthScreen from '../screens/user/AuthScreen';
+import StartupScreen from '../screens/StartupScreen';
+import { Button, SafeAreaView,View } from 'react-native';
 //#endregion
 
 const StackProducts = createStackNavigator();
@@ -97,23 +100,38 @@ const adminNavigator = () => {
 const Drawer = createDrawerNavigator();
 const drawerMain = () => {
     return (
+        <Drawer.Navigator drawerType='slide'  >
+            <Drawer.Screen name="productNavigator" component={ProductNavigator} options={{
+                title: "Products",
+                // drawerIcon: ({ color, size, focused }) => (
+                //     <Icon name="cart" color={focused ? 'grey' : '#888'} size={23} ></Icon>
+                // ),
+            }} />
+            <Drawer.Screen name="orderNavigator" component={orderNavigator} options={{
+                title: "Recipes"
+            }} />
+            <Drawer.Screen name="adminNavigator" component={adminNavigator} options={{
+                title: "Admin"
+            }} />
+        </Drawer.Navigator>
+    );
+};
+
+const stackMain = createStackNavigator();
+const mainNavigator = () => {
+    return (
         <NavigationContainer>
-            <Drawer.Navigator drawerType='slide' >
-                <Drawer.Screen name="productNavigator" component={ProductNavigator} options={{
-                    title: "Products",
-                    // drawerIcon: ({ color, size, focused }) => (
-                    //     <Icon name="cart" color={focused ? 'grey' : '#888'} size={23} ></Icon>
-                    // ),
+            <stackMain.Navigator>
+                <stackMain.Screen name="startup" component={StartupScreen}/>
+                <stackMain.Screen name="authUser" component={AuthScreen} options={{
+                    title: "Auth User"
                 }} />
-                <Drawer.Screen name="orderNavigator" component={orderNavigator} options={{
-                    title: "Recipes"
-                }} />
-                <Drawer.Screen name="adminNavigator" component={adminNavigator} options={{
-                    title: "Admin"
-                }} />
-            </Drawer.Navigator>
+                <stackMain.Screen name="drawer" component={drawerMain} options={{
+                    headerShown: false,
+                }}/>
+            </stackMain.Navigator>
         </NavigationContainer>
     );
 };
 
-export default drawerMain;
+export default mainNavigator;

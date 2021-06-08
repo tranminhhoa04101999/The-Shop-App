@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, StyleSheet, FlatList, Button, Text } from 'react-native';
+import React, { useState } from 'react';
+import { View, StyleSheet, FlatList, Button, Text, ActivityIndicator } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import Color from '../../constants/Colors';
 import CartItem from '../../components/CartItem';
@@ -8,7 +8,8 @@ import * as OrderActions from '../../store/action/order';
 
 const CartScreen = props => {
     const dispatch = useDispatch();
-
+    const totalAmount = useSelector(state => state.cart.totalAmount);
+    const [isLoading, setLoading] = useState(false);
 
     const listItem = useSelector(state => {
         const chuyenDoiQuaArray = [];
@@ -29,22 +30,30 @@ const CartScreen = props => {
                 quantity={data.item.quantity}
                 title={data.item.productTitle}
                 price={data.item.productPrice}
-                checkDelete = {true}
+                checkDelete={true}
                 sum={data.item.sum}
                 onRemove={() => dispatch(CartActions.removeFromCart(data.item.productId))}
             />
         );
 
+    };  
+
+    const addOrder = async () => {
+        setLoading(true);
+        await dispatch(OrderActions.addOrder(listItem, totalAmount));
+        setLoading(false);
     };
-    const totalAmount = useSelector(state => state.cart.totalAmount);
+
     return (
         <View style={styles.screen}>
             <View style={styles.summary}>
                 <Text style={styles.summaryText}>
                     Total : <Text style={styles.amount}>$ {totalAmount.toFixed(2)}</Text>
                 </Text>
+                {isLoading ? <View><ActivityIndicator size="small" color={Color.primaryColor}></ActivityIndicator></View>  :
                 <Button title="Order Now" disabled={listItem.length === 0}
-                    onPress={() => dispatch(OrderActions.addOrder(listItem, totalAmount))} ></Button>
+                    onPress={addOrder}>
+                </Button>}
             </View>
             <FlatList data={listItem} keyExtractor={item => item.productId} renderItem={renderItem} />
         </View>
